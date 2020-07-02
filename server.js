@@ -32,7 +32,26 @@ express()
       res.status(200).json({status:200, message})
     }, randomTime);
   })
-  
+
+  .get('/parrot-message', (req, res) => {
+    const message = {author: 'parrot', text: req.query.mess};
+    const randomTime = Math.floor(Math.random() * 3000);
+
+    setTimeout(() => {
+      res.status(200).json({status: 200, message})
+    }, randomTime);
+  })
+
+  .get('/bot-message', (req, res) => {
+    const message = {author: 'bot', text: req.query.mess};
+    const randomTime = Math.floor(Math.random() * 3000);    
+
+    setTimeout(() => {
+      res.status(200).json({status: 200, message})
+    }, randomTime);
+  })
+
+
   // this serves up the homepage
   .get('/', (req, res) => {
     res

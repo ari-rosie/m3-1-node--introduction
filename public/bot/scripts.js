@@ -1,5 +1,27 @@
 const messageInput = document.querySelector('#user-input');
 const conversationElem = document.querySelector('#conversation-container');
+const greetings = ['hi', 'hello', 'howdy'];
+const goodbyes = ['bye', 'see ya', 'farewell'];
+
+// check for greeting in text
+const includeWord = (text, array) => {
+  for (const word of array) {
+    if (text.toLowerCase().includes(word))
+      return true;
+    }
+  return false;
+}
+
+
+// defining bot's message
+const getBotMess = (text) => {
+  if (includeWord(text, greetings))
+    return 'Hi Napoleon!';
+  else if (includeWord(text, goodbyes))
+    return 'Bye bye buddy!';
+  else
+    return `Bzzt ${text}`;
+}
 
 // focus the input on load
 const handleFocus = () => {
@@ -26,7 +48,7 @@ const sendMessage = (event) => {
   const message = { author: 'user', text: messageInput.value };
   updateConversation(message);
 
-  fetch('/bot-message')
+  fetch(`/bot-message/?mess=${getBotMess(message.text)}`)
     .then((res) => res.json())
     .then((data) => {
       console.log(data);
