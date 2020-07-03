@@ -18,16 +18,17 @@ const includeWord = (text, array) => {
 
 // defining bot's message
 const getBotMess = (text) => {
-  if (includeWord(text, greetings))
-    return 'Hi Napoleon!';
-  else if (includeWord(text, goodbyes))
-    return 'Bye bye buddy!';
-  else if (text.toLowerCase().includes('funny')) {
+  if (text.toLowerCase().includes('funny')){
     jokeFlag = true;
     return 'Would you like to hear a joke?';
-  } else
+  } else if (includeWord(text, goodbyes))
+    return 'Bye bye buddy!';
+  else if (includeWord(text, greetings)) 
+    return 'Hi Napoleon!';  
+  else
     return `Bzzt ${text}`;
-}
+}    
+
 
 // focus the input on load
 const handleFocus = () => {
@@ -66,6 +67,7 @@ const tellJoke = (message) => {
     conversationElem.appendChild(messageElem2);
     conversationElem.scrollTop = conversationElem.scrollHeight;
     }, 3000);
+    jokeFlag = false;
 }
 
 const sendMessage = (event) => {
