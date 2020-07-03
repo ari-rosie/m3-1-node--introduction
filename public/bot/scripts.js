@@ -1,7 +1,10 @@
 const messageInput = document.querySelector('#user-input');
 const conversationElem = document.querySelector('#conversation-container');
+
 const greetings = ['hi', 'hello', 'howdy'];
 const goodbyes = ['bye', 'see ya', 'farewell'];
+
+let jokeFlag = false;
 
 // check for greeting in text
 const includeWord = (text, array) => {
@@ -19,7 +22,10 @@ const getBotMess = (text) => {
     return 'Hi Napoleon!';
   else if (includeWord(text, goodbyes))
     return 'Bye bye buddy!';
-  else
+  else if (text.toLowerCase().includes('funny')) {
+    jokeFlag = true;
+    return 'Would you like to hear a joke?';
+  } else
     return `Bzzt ${text}`;
 }
 
@@ -42,18 +48,46 @@ const updateConversation = (message) => {
   handleFocus();
 };
 
+const tellJoke = (message) => {
+  const { author, text } = message;
+  const { joke, punch } = text;
+  const messageElem = document.createElement('p');
+
+  messageElem.classList.add('message', author);
+  messageElem.innerHTML = `<span>${joke}</span>`;
+  conversationElem.appendChild(messageElem);
+  conversationElem.scrollTop = conversationElem.scrollHeight;
+
+  setTimeout(() => {
+    const messageElem2 = document.createElement('p');
+
+    messageElem2.classList.add('message', author);
+    messageElem2.innerHTML = `<span>${punch}</span>`;
+    conversationElem.appendChild(messageElem2);
+    conversationElem.scrollTop = conversationElem.scrollHeight;
+    }, 3000);
+}
+
 const sendMessage = (event) => {
   event.preventDefault();
 
   const message = { author: 'user', text: messageInput.value };
   updateConversation(message);
 
-  fetch(`/bot-message/?mess=${getBotMess(message.text)}`)
+  if (message.text === 'yes' && jokeFlag) {
+    fetch(`/bot-message/?mess=jokeFlag`)
     .then((res) => res.json())
     .then((data) => {
-      console.log(data);
+      tellJoke(data.message);
+    });
+  } else {
+    fetch(`/bot-message/?mess=${getBotMess(message.text)}`)
+    .then((res) => res.json())
+    .then((data) => {
       updateConversation(data.message);
     });
+  }
+
 };
 
 // call handleFocus on load

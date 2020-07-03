@@ -24,7 +24,7 @@ express()
 
   .get('/monkey-message', (req, res) => {
     const messArr = ["Monkey see, monkey do!", "Gimme peanuts!!", "Ok bye", "🐵", "🙈"];
-    const messNum = Math.floor(Math.random() * (messArr.length - 1))
+    const messNum = Math.floor(Math.random() * (messArr.length));
     const randomTime = Math.floor(Math.random() * 3000);
 
     const message = {author: 'monkey', text: messArr[messNum]};
@@ -45,7 +45,11 @@ express()
   .get('/bot-message', (req, res) => {
     const message = {author: 'bot', text: req.query.mess};
     const randomTime = Math.floor(Math.random() * 3000);    
+    const jokes = [{joke: "Why can't you hear a pterodactyl go to the bathroom?", punch: "Because the pee is silent."}, {joke: 'What did the pirate say on his 80th birthday?', punch: 'AYE MATEY'}, {joke: "What's the difference between a budlight and a house by the sea?", punch: "None, the're both really close to water!"}];
+    const randomNum = Math.floor(Math.random() * (jokes.length));
 
+    if (message.text === 'jokeFlag')
+      message.text = jokes[randomNum];
     setTimeout(() => {
       res.status(200).json({status: 200, message})
     }, randomTime);
